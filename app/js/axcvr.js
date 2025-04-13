@@ -85,8 +85,6 @@ if (typeof AXCVR === "undefined" || AXCVR === null) {
 
                     AXCVR.pitch._current = pitch;
 
-                    const pitchThreshold = 17143;
-
                     // let channel = NaN;
                     let channel = Channel.fromFrequency(pitch, protocolVersion);
 
@@ -140,7 +138,7 @@ function getProtocolVersionString(protocolVersion) {
     return "v" + protocolVersion;
 }
 
-const AXCVR_PROTOCOL_VERSION_DEFAULT = "v0";
+const AXCVR_PROTOCOL_VERSION_DEFAULT = "v4";
 
 AXCVR.PROTOCOL_VERSION_DEFAULT = AXCVR_PROTOCOL_VERSION_DEFAULT
 
