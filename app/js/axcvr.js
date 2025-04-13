@@ -2,9 +2,147 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+if (typeof AXCVR === "undefined" || AXCVR === null) {
+    AXCVR = {};
+
+    AXCVR.TRANSFER_RATE = 200;
+
+    AXCVR.pitch = {};
+
+    AXCVR._audioCtx = null;
+    AXCVR._current = null;
+    AXCVR._microphoneStream = null;
+    AXCVR._analyserNode = null;
+    AXCVR._audioData = null;
+    AXCVR._corrolatedSignal = null;
+    AXCVR._localMaxima = null;
+    AXCVR._frequencyDisplayElement = null;
+
+    AXCVR.download = function download(filename) {
+        const json = {
+            frequency: AXCVR.pitch.current()
+        };
+        const data = JSON.stringify(json);
+        const type = "text/plain";
+        var file = new Blob([data], {type: type});
+        if (window.navigator.msSaveOrOpenBlob) // IE10+
+            window.navigator.msSaveOrOpenBlob(file, filename);
+        else { // Others
+            var a = document.createElement("a"),
+            url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(
+                function() {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                },
+                0
+            );
+        }
+    }
+
+    AXCVR.pitch.current = function current() {
+        return AXCVR.pitch._current;
+    }
+
+    AXCVR.pitch.isInitialized = function isInitialized() {
+        return AXCVR._audioCtx !== null;
+    }
+
+    AXCVR.pitch.initialize = function initialize(audioCtx) {
+        if (AXCVR.pitch.isInitialized()) return;
+        // AXCVR._audioCtx = typeof audioCtx === "object" ? audioCtx : (new (window.AudioContext || window.webkitAudioContext)());
+        AXCVR._audioCtx = audioCtx;
+        AXCVR._microphoneStream = null;
+        AXCVR._analyserNode = AXCVR._audioCtx.createAnalyser()
+        AXCVR._audioData = new Float32Array(AXCVR._analyserNode.fftSize);;
+        AXCVR._corrolatedSignal = new Float32Array(AXCVR._analyserNode.fftSize);;
+        AXCVR._localMaxima = new Array(10);
+        AXCVR._frequencyDisplayElement = document.querySelector('#frequency');
+    }
+
+    AXCVR.pitch.startDetection = function startDetection(audioCtx, protocolVersion)
+    {
+        AXCVR.pitch.initialize(audioCtx);
+        navigator.mediaDevices.getUserMedia ({audio: true})
+            .then((stream) =>
+            {
+                AXCVR._microphoneStream = AXCVR._audioCtx.createMediaStreamSource(stream);
+                AXCVR._microphoneStream.connect(AXCVR._analyserNode);
+
+                AXCVR._audioData = new Float32Array(AXCVR._analyserNode.fftSize);
+                AXCVR._corrolatedSignal = new Float32Array(AXCVR._analyserNode.fftSize);
+
+                setInterval(() => {
+                    AXCVR._analyserNode.getFloatTimeDomainData(AXCVR._audioData);
+
+                    let pitch = AXCVR.pitch.getAutocorrolated();
+
+                    pitch = Math.round(pitch);
+
+                    AXCVR.pitch._current = pitch;
+
+                    const pitchThreshold = 17143;
+
+                    // let channel = NaN;
+                    let channel = Channel.fromFrequency(pitch, protocolVersion);
+
+                    AXCVR._frequencyDisplayElement.innerHTML = `${channel.index}`;
+                }, AXCVR.TRANSFER_RATE);
+            })
+            .catch((err) =>
+            {
+                console.log(err);
+            });
+    }
+
+    AXCVR.pitch.getAutocorrolated = function getAutocorrolated()
+    {
+        // First: autocorrolate the signal
+
+        let maximaCount = 0;
+
+        for (let l = 0; l < AXCVR._analyserNode.fftSize; l++) {
+            AXCVR._corrolatedSignal[l] = 0;
+            for (let i = 0; i < AXCVR._analyserNode.fftSize - l; i++) {
+                AXCVR._corrolatedSignal[l] += AXCVR._audioData[i] * AXCVR._audioData[i + l];
+            }
+            if (l > 1) {
+                if ((AXCVR._corrolatedSignal[l - 2] - AXCVR._corrolatedSignal[l - 1]) < 0
+                    && (AXCVR._corrolatedSignal[l - 1] - AXCVR._corrolatedSignal[l]) > 0) {
+                    AXCVR._localMaxima[maximaCount] = (l - 1);
+                    maximaCount++;
+                    if ((maximaCount >= AXCVR._localMaxima.length))
+                        break;
+                }
+            }
+        }
+
+        // Second: find the average distance in samples between maxima
+
+        let maximaMean = AXCVR._localMaxima[0];
+
+        for (let i = 1; i < maximaCount; i++)
+            maximaMean += AXCVR._localMaxima[i] - AXCVR._localMaxima[i - 1];
+
+        maximaMean /= maximaCount;
+
+        return AXCVR._audioCtx.sampleRate / maximaMean;
+    }
+}
+else console.log("AXCVR already provided.");
+
 function getProtocolVersionString(protocolVersion) {
+    if (typeof(protocolVersion) === "string") return protocolVersion;
     return "v" + protocolVersion;
 }
+
+const AXCVR_PROTOCOL_VERSION_DEFAULT = "v0";
+
+AXCVR.PROTOCOL_VERSION_DEFAULT = AXCVR_PROTOCOL_VERSION_DEFAULT
 
 class Channel {
     #index = 0;
@@ -17,8 +155,8 @@ class Channel {
          * Range: `17.778` Mhz <-> `18.462` Mhz
          *
          * Channels:
-         * * `17.778` Mhz (safe)
-         * * `18.462` Mhz (safe)
+         * * `17.778` Mhz (near-ultrasonic)
+         * * `18.462` Mhz (near-ultrasonic)
          *
          * AXCVP v0 is designed for personal-use.
          *
@@ -27,8 +165,8 @@ class Channel {
          * Research into the health impact of the frequency range used in `v0` compared with the range used in `v1` is still underway.
          */
         v0: {
-            17778:  0b1,    // safe
-            18462:  0b0     // safe
+            18462:  0b0,    // near-ultrasonic
+            17778:  0b1     // near-ultrasonic
         },
 
         /**
@@ -37,8 +175,8 @@ class Channel {
          * Range: `18.462` Mhz <-> `19.2` Mhz
          *
          * Channels:
-         * * `18.462` Mhz (safe)
-         * * `19.2` Mhz (safe)
+         * * `18.462` Mhz (near-ultrasonic)
+         * * `19.2` Mhz (near-ultrasonic)
          *
          * v00 is designed for personal-use.
          *
@@ -46,8 +184,29 @@ class Channel {
          * This makes it more ideal for quiet spaces, such as homes (and possibly even hospitals after thorough lab-testing has been done and approval has been granted).
          */
         v00: {
-            18462:  0b1,    // safe
-            19200:  0b0     // safe
+            18462:  0b1,    // near-ultrasonic
+            19200:  0b0     // near-ultrasonic
+        },
+
+        /**
+         * AXCVRP v00
+         *
+         * Range: `18.462` Mhz <-> `19.2` Mhz
+         *
+         * Channels:
+         * * `18.462` Mhz (near-ultrasonic)
+         * * `19.2` Mhz (near-ultrasonic)
+         *
+         * v00 is designed for personal-use.
+         *
+         * v00 is an improvement upon v0, opting for `19.2` Mhz for its reduced noise-polution footprint when compared to `18.462`, `17.778`, and `17.143` Mhz.
+         * This makes it more ideal for quiet spaces, such as homes (and possibly even hospitals after thorough lab-testing has been done and approval has been granted).
+         */
+        v000: {
+            17778:  0b11,    // near-ultrasonic
+            18462:  0b10,    // near-ultrasonic
+            19200:  0b01,    // near-ultrasonic
+            20000:  0b00     // ultrasonic
         },
 
         /**
@@ -324,11 +483,11 @@ class Channel {
     }
 
     static count(protocolVersion) {
-        return Channel.frequencies[getProtocolVersionString(protocolVersion)].length;
+        return Object.keys(Channel.frequencies(getProtocolVersionString(protocolVersion))).length ?? 0;
     }
 
-    static get frequencies() {
-        return Channel.#frequencies;
+    static frequencies(protocolVersion) {
+        return Channel.#frequencies[getProtocolVersionString(protocolVersion)];
     }
 
     get frequency() {
@@ -345,158 +504,30 @@ class Channel {
     }
 
     static frequencyFromChannelIndex(channelIndex, protocolVersion) {
-        const frequencies = Channel.frequencies[getProtocolVersionString(protocolVersion)];
-        let frequency = frequencies[channelIndex];
-
-        frequency = typeof frequency === "number" && frequency > 0 ? frequency : 0;
+        const frequencies = Channel.frequencies(getProtocolVersionString(protocolVersion));
+        let frequency = Object.keys(frequencies)[channelIndex];
 
         return frequency;
     }
 
     static fromFrequency(frequency, protocolVersion) {
-        let channelIndex = Channel.count(protocolVersion);
-        let channelFrequency = Channel.frequencyFromChannelIndex(channelIndex - 1, protocolVersion);
+        let maxChannelIndex = Channel.count(protocolVersion) - 1;
+        let channelIndex = maxChannelIndex;
+        let channelFrequency = 0;
 
-        while ((channelFrequency = Channel.frequencyFromChannelIndex(--channelIndex, protocolVersion)) > (frequency + Channel.FREQUENCY_EPSILON) && channelIndex >= 0) {}
+        const getChannelFrequency = function () {
+            return Channel.frequencyFromChannelIndex(channelIndex, protocolVersion);
+        }
+
+        channelFrequency = getChannelFrequency();
+
+        let approximateFrequency = frequency + Channel.FREQUENCY_EPSILON;
+
+        for (channelIndex = maxChannelIndex; channelIndex >= 0 && ((channelFrequency = getChannelFrequency()) > approximateFrequency); channelIndex--) {}
 
         if (channelFrequency < 0) channelFrequency = NaN;
         if (channelIndex < 0) channelIndex = NaN;
 
         return new Channel(channelIndex, channelFrequency);
-    }
-}
-
-if (typeof AXCVR === "object") {
-    console.log("AXCVR already provided.");
-} else {
-    AXCVR = {};
-
-    AXCVR.TRANSFER_RATE = 200;
-
-    AXCVR.pitch = {};
-
-    AXCVR._audioCtx = null;
-    AXCVR._current = null;
-    AXCVR._microphoneStream = null;
-    AXCVR._analyserNode = null;
-    AXCVR._audioData = null;
-    AXCVR._corrolatedSignal = null;
-    AXCVR._localMaxima = null;
-    AXCVR._frequencyDisplayElement = null;
-
-    AXCVR.download = function download(filename) {
-        const json = {
-            frequency: AXCVR.pitch.current()
-        };
-        const data = JSON.stringify(json);
-        const type = "text/plain";
-        var file = new Blob([data], {type: type});
-        if (window.navigator.msSaveOrOpenBlob) // IE10+
-            window.navigator.msSaveOrOpenBlob(file, filename);
-        else { // Others
-            var a = document.createElement("a"),
-            url = URL.createObjectURL(file);
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(
-                function() {
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);
-                },
-                0
-            );
-        }
-    }
-
-    AXCVR.pitch.current = function current() {
-        return AXCVR.pitch._current;
-    }
-
-    AXCVR.pitch.isInitialized = function isInitialized() {
-        return AXCVR._audioCtx !== null;
-    }
-
-    AXCVR.pitch.initialize = function initialize(audioCtx) {
-        if (AXCVR.pitch.isInitialized()) return;
-        // AXCVR._audioCtx = typeof audioCtx === "object" ? audioCtx : (new (window.AudioContext || window.webkitAudioContext)());
-        AXCVR._audioCtx = audioCtx;
-        AXCVR._microphoneStream = null;
-        AXCVR._analyserNode = AXCVR._audioCtx.createAnalyser()
-        AXCVR._audioData = new Float32Array(AXCVR._analyserNode.fftSize);;
-        AXCVR._corrolatedSignal = new Float32Array(AXCVR._analyserNode.fftSize);;
-        AXCVR._localMaxima = new Array(10);
-        AXCVR._frequencyDisplayElement = document.querySelector('#frequency');
-    }
-
-    AXCVR.pitch.startDetection = function startDetection(audioCtx, version)
-    {
-        AXCVR.pitch.initialize(audioCtx);
-        navigator.mediaDevices.getUserMedia ({audio: true})
-            .then((stream) =>
-            {
-                AXCVR._microphoneStream = AXCVR._audioCtx.createMediaStreamSource(stream);
-                AXCVR._microphoneStream.connect(AXCVR._analyserNode);
-
-                AXCVR._audioData = new Float32Array(AXCVR._analyserNode.fftSize);
-                AXCVR._corrolatedSignal = new Float32Array(AXCVR._analyserNode.fftSize);
-
-                setInterval(() => {
-                    AXCVR._analyserNode.getFloatTimeDomainData(AXCVR._audioData);
-
-                    let pitch = AXCVR.pitch.getAutocorrolated();
-
-                    pitch = Math.round(pitch);
-
-                    AXCVR.pitch._current = pitch;
-
-                    const pitchThreshold = 17143;
-
-                    // let channel = NaN;
-                    let channel = Channel.fromFrequency(pitch, version);
-
-                    AXCVR._frequencyDisplayElement.innerHTML = `${channel.index}`;
-                }, AXCVR.TRANSFER_RATE);
-            })
-            .catch((err) =>
-            {
-                console.log(err);
-            });
-    }
-
-    AXCVR.pitch.getAutocorrolated = function getAutocorrolated()
-    {
-        AXCVR.pitch.initialize();
-        // First: autocorrolate the signal
-
-        let maximaCount = 0;
-
-        for (let l = 0; l < AXCVR._analyserNode.fftSize; l++) {
-            AXCVR._corrolatedSignal[l] = 0;
-            for (let i = 0; i < AXCVR._analyserNode.fftSize - l; i++) {
-                AXCVR._corrolatedSignal[l] += AXCVR._audioData[i] * AXCVR._audioData[i + l];
-            }
-            if (l > 1) {
-                if ((AXCVR._corrolatedSignal[l - 2] - AXCVR._corrolatedSignal[l - 1]) < 0
-                    && (AXCVR._corrolatedSignal[l - 1] - AXCVR._corrolatedSignal[l]) > 0) {
-                    AXCVR._localMaxima[maximaCount] = (l - 1);
-                    maximaCount++;
-                    if ((maximaCount >= AXCVR._localMaxima.length))
-                        break;
-                }
-            }
-        }
-
-        // Second: find the average distance in samples between maxima
-
-        let maximaMean = AXCVR._localMaxima[0];
-
-        for (let i = 1; i < maximaCount; i++)
-            maximaMean += AXCVR._localMaxima[i] - AXCVR._localMaxima[i - 1];
-
-        maximaMean /= maximaCount;
-
-        return AXCVR._audioCtx.sampleRate / maximaMean;
     }
 }
