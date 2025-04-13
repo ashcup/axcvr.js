@@ -1,0 +1,24 @@
+{
+  "name": "axcvr",
+  "version": "0.1.0",
+  "description": "Audio transceiver library",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashcup/axcvr.git"
+  },
+  "keywords": [
+    "audio",
+    "transceiver",
+    "xcvr"
+  ],
+  "author": "Ash \"ashcup\" Cupstid",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/ashcup/axcvr/issues"
+  },
+  "homepage": "https://github.com/ashcup/axcvr#readme"
+}

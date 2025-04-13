@@ -1,0 +1,26 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this -->
+<!-- file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pitch Detection</title>
+</head>
+<body>
+    <h1>Frequency (Hz)</h1>
+    <h2 id="frequency">0.0</h2>
+    <div>
+        <button onclick="start()">
+            Detect Channel/Frequency
+        </button>
+        <button onclick="save()">
+            Save Current Frequency
+        </button>
+    </div>
+    <canvas width="100px" height="100px" id="canvasCtx"></canvas>
+    <script src="../js/axcvr.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
