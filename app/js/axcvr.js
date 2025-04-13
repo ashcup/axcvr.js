@@ -152,16 +152,16 @@ class Channel {
         /**
          * AXCVRP v0
          *
-         * Range: `17.778` Mhz <-> `18.462` Mhz
+         * Range: `17.778` kHz <-> `18.462` kHz
          *
          * Channels:
-         * * `17.778` Mhz (near-ultrasonic)
-         * * `18.462` Mhz (near-ultrasonic)
+         * * `17.778` kHz (near-ultrasonic)
+         * * `18.462` kHz (near-ultrasonic)
          *
          * AXCVP v0 is designed for personal-use.
          *
-         * v0 is an improvement upon v1, opting for `18.462` Mhz for its increased accuracy when compared to `19.2` Mhz.
-         * The `19.2` Mhz is frequency is still useful, however, in applications where `18.462` Mhz is too low (and noise-poluting).
+         * v0 is an improvement upon v1, opting for `18.462` kHz for its increased accuracy when compared to `19.2` kHz.
+         * The `19.2` kHz is frequency is still useful, however, in applications where `18.462` kHz is too low (and noise-poluting).
          * Research into the health impact of the frequency range used in `v0` compared with the range used in `v1` is still underway.
          */
         v0: {
@@ -172,15 +172,15 @@ class Channel {
         /**
          * AXCVRP v00
          *
-         * Range: `18.462` Mhz <-> `19.2` Mhz
+         * Range: `18.462` kHz <-> `19.2` kHz
          *
          * Channels:
-         * * `18.462` Mhz (near-ultrasonic)
-         * * `19.2` Mhz (near-ultrasonic)
+         * * `18.462` kHz (near-ultrasonic)
+         * * `19.2` kHz (near-ultrasonic)
          *
          * v00 is designed for personal-use.
          *
-         * v00 is an improvement upon v0, opting for `19.2` Mhz for its reduced noise-polution footprint when compared to `18.462`, `17.778`, and `17.143` Mhz.
+         * v00 is an improvement upon v0, opting for `19.2` kHz for its reduced noise-polution footprint when compared to `18.462`, `17.778`, and `17.143` kHz.
          * This makes it more ideal for quiet spaces, such as homes (and possibly even hospitals after thorough lab-testing has been done and approval has been granted).
          */
         v00: {
@@ -191,15 +191,15 @@ class Channel {
         /**
          * AXCVRP v00
          *
-         * Range: `18.462` Mhz <-> `19.2` Mhz
+         * Range: `18.462` kHz <-> `19.2` kHz
          *
          * Channels:
-         * * `18.462` Mhz (near-ultrasonic)
-         * * `19.2` Mhz (near-ultrasonic)
+         * * `18.462` kHz (near-ultrasonic)
+         * * `19.2` kHz (near-ultrasonic)
          *
          * v00 is designed for personal-use.
          *
-         * v00 is an improvement upon v0, opting for `19.2` Mhz for its reduced noise-polution footprint when compared to `18.462`, `17.778`, and `17.143` Mhz.
+         * v00 is an improvement upon v0, opting for `19.2` kHz for its reduced noise-polution footprint when compared to `18.462`, `17.778`, and `17.143` kHz.
          * This makes it more ideal for quiet spaces, such as homes (and possibly even hospitals after thorough lab-testing has been done and approval has been granted).
          */
         v000: {
@@ -214,11 +214,11 @@ class Channel {
          *
          * AXCVRP v1 is designed for personal-use.
          *
-         * Range: `17.143` Mhz <-> `17.778` Mhz
+         * Range: `17.143` kHz <-> `17.778` kHz
          *
          * Channels:
-         * * `17.143` Mhz (headache)
-         * * `17.778` Mhz (safe)
+         * * `17.143` kHz (headache)
+         * * `17.778` kHz (safe)
          */
         v1: {
             17143:  0b1,    // headache
@@ -230,13 +230,13 @@ class Channel {
          *
          * AXCVRP v2 is designed for commercial-use.
          *
-         * Range: `16` Mhz <-> `18.462` Mhz
+         * Range: `16` kHz <-> `18.462` kHz
          *
          * Channels:
-         * * `16` Mhz (headache)
-         * * `17.143` Mhz (headache)
-         * * `17.778` Mhz (safe)
-         * * `18.462` Mhz (safe)
+         * * `16` kHz (headache)
+         * * `17.143` kHz (headache)
+         * * `17.778` kHz (safe)
+         * * `18.462` kHz (safe)
          */
         v2: {
             16000:  0b11,   // headache
@@ -250,17 +250,17 @@ class Channel {
          *
          * AXCVRP v3 is designed for industrial-use and research.
          *
-         * Range: `11.163` Mhz <-> `18.462` Mhz
+         * Range: `11.163` kHz <-> `18.462` kHz
          *
          * Channels:
-         * * `11.163` Mhz (auditoxicosis)
-         * * `12` Mhz (headache)
-         * * `12.308` Mhz (headache)
-         * * `15` Mhz (headache)
-         * * `16` Mhz (headache)
-         * * `17.143` Mhz (headache)
-         * * `17.778` Mhz (safe)
-         * * `18.462` Mhz (safe)
+         * * `11.163` kHz (auditoxicosis)
+         * * `12` kHz (headache)
+         * * `12.308` kHz (headache)
+         * * `15` kHz (headache)
+         * * `16` kHz (headache)
+         * * `17.143` kHz (headache)
+         * * `17.778` kHz (safe)
+         * * `18.462` kHz (safe)
          */
         v3: {
             11163:  0b111,  // audiotoxicosis
@@ -278,24 +278,24 @@ class Channel {
          *
          * AXCVRP v4 is designed for industrial-use and research.
          *
-         * Range: `9.231` Mhz <-> `19.2` Mhz
+         * Range: `9.231` kHz <-> `19.2` kHz
          *
          * Channels:
-         * * `9.231` Mhz (auditoxicosis)
-         * * `9.412` Mhz (auditoxicosis)
-         * * `9.6` Mhz (auditoxicosis)
-         * * `9.796` Mhz (auditoxicosis)
-         * * `10.213` Mhz (auditoxicosis)
-         * * `10.435` Mhz (auditoxicosis)
-         * * `10.667` Mhz (auditoxicosis)
-         * * `11.163` Mhz (auditoxicosis)
-         * * `12` Mhz (headache)
-         * * `12.308` Mhz (headache)
-         * * `15` Mhz (headache)
-         * * `16` Mhz (headache)
-         * * `17.143` Mhz (headache)
-         * * `17.778` Mhz (safe)
-         * * `18.462` Mhz (safe)
+         * * `9.231` kHz (auditoxicosis)
+         * * `9.412` kHz (auditoxicosis)
+         * * `9.6` kHz (auditoxicosis)
+         * * `9.796` kHz (auditoxicosis)
+         * * `10.213` kHz (auditoxicosis)
+         * * `10.435` kHz (auditoxicosis)
+         * * `10.667` kHz (auditoxicosis)
+         * * `11.163` kHz (auditoxicosis)
+         * * `12` kHz (headache)
+         * * `12.308` kHz (headache)
+         * * `15` kHz (headache)
+         * * `16` kHz (headache)
+         * * `17.143` kHz (headache)
+         * * `17.778` kHz (safe)
+         * * `18.462` kHz (safe)
          */
         v4: {
             9231:   0b1111, // auditoxicosis
@@ -321,42 +321,42 @@ class Channel {
          *
          * AXCVRP v5 is designed for industrial-use and research.
          *
-         * Range: `5.854` Mhz <-> `19.2` Mhz
+         * Range: `5.854` kHz <-> `19.2` kHz
          *
          * Channels:
-         * * `5.854` Mhz [strong]
-         * * `5.926` Mhz [strong]
-         * * `6.076` Mhz (ear ache)
-         * * `6.234` Mhz (untested)
-         * * `6.316` Mhz (ear ache)
-         * * `6.486` Mhz (ear ache)
-         * * `6.667` Mhz (ear ache)
-         * * `6.761` Mhz (ear ache)
-         * * `6.857` Mhz (auditoxicosis)
-         * * `6.957` Mhz (auditoxicosis)
-         * * `8.000` Mhz (auditoxicosis)
-         * * `8.136` Mhz (auditoxicosis)
-         * * `8.421` Mhz (auditoxicosis)
-         * * `8.571` Mhz (auditoxicosis)
-         * * `8.727` Mhz (auditoxicosis)
-         * * `8.889` Mhz (auditoxicosis)
-         * * `9.057` Mhz (auditoxicosis)
-         * * `9.231` Mhz (auditoxicosis)
-         * * `9.412` Mhz (auditoxicosis)
-         * * `9.6` Mhz (auditoxicosis)
-         * * `9.796` Mhz (auditoxicosis)
-         * * `10.213` Mhz (auditoxicosis)
-         * * `10.435` Mhz (auditoxicosis)
-         * * `10.667` Mhz (auditoxicosis)
-         * * `11.163` Mhz (audiotoxicosis)
-         * * `12` Mhz (headache)
-         * * `12.308` Mhz (headache)
-         * * `15` Mhz (headache)
-         * * `16` Mhz (headache)
-         * * `17.143` Mhz (headache)
-         * * `17.778` Mhz (safe)
-         * * `18.462` Mhz (safe)
-         * * `19.2` Mhz (safe)
+         * * `5.854` kHz [strong]
+         * * `5.926` kHz [strong]
+         * * `6.076` kHz (ear ache)
+         * * `6.234` kHz (untested)
+         * * `6.316` kHz (ear ache)
+         * * `6.486` kHz (ear ache)
+         * * `6.667` kHz (ear ache)
+         * * `6.761` kHz (ear ache)
+         * * `6.857` kHz (auditoxicosis)
+         * * `6.957` kHz (auditoxicosis)
+         * * `8.000` kHz (auditoxicosis)
+         * * `8.136` kHz (auditoxicosis)
+         * * `8.421` kHz (auditoxicosis)
+         * * `8.571` kHz (auditoxicosis)
+         * * `8.727` kHz (auditoxicosis)
+         * * `8.889` kHz (auditoxicosis)
+         * * `9.057` kHz (auditoxicosis)
+         * * `9.231` kHz (auditoxicosis)
+         * * `9.412` kHz (auditoxicosis)
+         * * `9.6` kHz (auditoxicosis)
+         * * `9.796` kHz (auditoxicosis)
+         * * `10.213` kHz (auditoxicosis)
+         * * `10.435` kHz (auditoxicosis)
+         * * `10.667` kHz (auditoxicosis)
+         * * `11.163` kHz (audiotoxicosis)
+         * * `12` kHz (headache)
+         * * `12.308` kHz (headache)
+         * * `15` kHz (headache)
+         * * `16` kHz (headache)
+         * * `17.143` kHz (headache)
+         * * `17.778` kHz (safe)
+         * * `18.462` kHz (safe)
+         * * `19.2` kHz (safe)
          */
         v5: {
             5854:   0b11111,    // [strong]
@@ -399,42 +399,42 @@ class Channel {
          *
          * AXCVRP v6 is designed for industrial-use and research.
          *
-         * Range: `5.854` Mhz <-> `19.2` Mhz
+         * Range: `5.854` kHz <-> `19.2` kHz
          *
          * Channels:
-         * * `5.854` Mhz [strong]
-         * * `5.926` Mhz [strong]
-         * * `6.076` Mhz (ear ache)
-         * * `6.234` Mhz (untested)
-         * * `6.316` Mhz (ear ache)
-         * * `6.486` Mhz (ear ache)
-         * * `6.667` Mhz (ear ache)
-         * * `6.761` Mhz (ear ache)
-         * * `6.857` Mhz (auditoxicosis)
-         * * `6.957` Mhz (auditoxicosis)
-         * * `8.000` Mhz (auditoxicosis)
-         * * `8.136` Mhz (auditoxicosis)
-         * * `8.421` Mhz (auditoxicosis)
-         * * `8.571` Mhz (auditoxicosis)
-         * * `8.727` Mhz (auditoxicosis)
-         * * `8.889` Mhz (auditoxicosis)
-         * * `9.057` Mhz (auditoxicosis)
-         * * `9.231` Mhz (auditoxicosis)
-         * * `9.412` Mhz (auditoxicosis)
-         * * `9.6` Mhz (auditoxicosis)
-         * * `9.796` Mhz (auditoxicosis)
-         * * `10.213` Mhz (auditoxicosis)
-         * * `10.435` Mhz (auditoxicosis)
-         * * `10.667` Mhz (auditoxicosis)
-         * * `11.163` Mhz (audiotoxicosis)
-         * * `12` Mhz (headache)
-         * * `12.308` Mhz (headache)
-         * * `15` Mhz (headache)
-         * * `16` Mhz (headache)
-         * * `17.143` Mhz (headache)
-         * * `17.778` Mhz (safe)
-         * * `18.462` Mhz (safe)
-         * * `19.2` Mhz (safe)
+         * * `5.854` kHz [strong]
+         * * `5.926` kHz [strong]
+         * * `6.076` kHz (ear ache)
+         * * `6.234` kHz (untested)
+         * * `6.316` kHz (ear ache)
+         * * `6.486` kHz (ear ache)
+         * * `6.667` kHz (ear ache)
+         * * `6.761` kHz (ear ache)
+         * * `6.857` kHz (auditoxicosis)
+         * * `6.957` kHz (auditoxicosis)
+         * * `8.000` kHz (auditoxicosis)
+         * * `8.136` kHz (auditoxicosis)
+         * * `8.421` kHz (auditoxicosis)
+         * * `8.571` kHz (auditoxicosis)
+         * * `8.727` kHz (auditoxicosis)
+         * * `8.889` kHz (auditoxicosis)
+         * * `9.057` kHz (auditoxicosis)
+         * * `9.231` kHz (auditoxicosis)
+         * * `9.412` kHz (auditoxicosis)
+         * * `9.6` kHz (auditoxicosis)
+         * * `9.796` kHz (auditoxicosis)
+         * * `10.213` kHz (auditoxicosis)
+         * * `10.435` kHz (auditoxicosis)
+         * * `10.667` kHz (auditoxicosis)
+         * * `11.163` kHz (audiotoxicosis)
+         * * `12` kHz (headache)
+         * * `12.308` kHz (headache)
+         * * `15` kHz (headache)
+         * * `16` kHz (headache)
+         * * `17.143` kHz (headache)
+         * * `17.778` kHz (safe)
+         * * `18.462` kHz (safe)
+         * * `19.2` kHz (safe)
          */
         v6: {
             5581:   0b100100,   // untested
