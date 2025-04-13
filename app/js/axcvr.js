@@ -184,8 +184,8 @@ class Channel {
          * This makes it more ideal for quiet spaces, such as homes (and possibly even hospitals after thorough lab-testing has been done and approval has been granted).
          */
         v00: {
-            18462:  0b1,    // near-ultrasonic
-            19200:  0b0     // near-ultrasonic
+            19200:  0b0,    // near-ultrasonic
+            18462:  0b1     // near-ultrasonic
         },
 
         /**
@@ -203,10 +203,10 @@ class Channel {
          * This makes it more ideal for quiet spaces, such as homes (and possibly even hospitals after thorough lab-testing has been done and approval has been granted).
          */
         v000: {
-            17778:  0b11,    // near-ultrasonic
-            18462:  0b10,    // near-ultrasonic
+            20000:  0b00,    // ultrasonic
             19200:  0b01,    // near-ultrasonic
-            20000:  0b00     // ultrasonic
+            18462:  0b10,    // near-ultrasonic
+            17778:  0b11,    // near-ultrasonic
         },
 
         /**
@@ -221,8 +221,8 @@ class Channel {
          * * `17.778` kHz (safe)
          */
         v1: {
+            17778:  0b0,    // safe
             17143:  0b1,    // headache
-            17778:  0b0     // safe
         },
 
         /**
@@ -239,10 +239,10 @@ class Channel {
          * * `18.462` kHz (safe)
          */
         v2: {
-            16000:  0b11,   // headache
-            17143:  0b10,   // headache
+            18462:  0b00,   // safe
             17778:  0b01,   // safe
-            18462:  0b00    // safe
+            17143:  0b10,   // headache
+            16000:  0b11,   // headache
         },
 
         /**
@@ -263,14 +263,14 @@ class Channel {
          * * `18.462` kHz (safe)
          */
         v3: {
-            11163:  0b111,  // audiotoxicosis
-            12000:  0b110,  // headache
-            12308:  0b101,  // headache
-            15000:  0b100,  // headache
-            16000:  0b011,  // headache
-            17143:  0b010,  // headache
+            18462:  0b000,  // safe
             17778:  0b001,  // safe
-            18462:  0b000   // safe
+            17143:  0b010,  // headache
+            16000:  0b011,  // headache
+            15000:  0b100,  // headache
+            12308:  0b101,  // headache
+            12000:  0b110,  // headache
+            11163:  0b111,  // audiotoxicosis
         },
 
         /**
@@ -298,22 +298,22 @@ class Channel {
          * * `18.462` kHz (safe)
          */
         v4: {
-            9231:   0b1111, // auditoxicosis
-            9412:   0b1110, // auditoxicosis
-            9600:   0b1101, // auditoxicosis
-            9796:   0b1100, // auditoxicosis
-            10213:  0b1011, // auditoxicosis
-            10435:  0b1010, // auditoxicosis
-            10667:  0b1001, // auditoxicosis
-            11163:  0b1000, // auditoxicosis
-            12000:  0b0111, // headache
-            12308:  0b0110, // headache
-            15000:  0b0101, // headache
-            16000:  0b0100, // headache
-            17143:  0b0011, // headache
-            17778:  0b0010, // safe
+            19200:  0b0000, // safe
             18462:  0b0001, // safe
-            19200:  0b0000  // safe
+            17778:  0b0010, // safe
+            17143:  0b0011, // headache
+            16000:  0b0100, // headache
+            15000:  0b0101, // headache
+            12308:  0b0110, // headache
+            12000:  0b0111, // headache
+            11163:  0b1000, // auditoxicosis
+            10667:  0b1001, // auditoxicosis
+            10435:  0b1010, // auditoxicosis
+            10213:  0b1011, // auditoxicosis
+            9796:   0b1100, // auditoxicosis
+            9600:   0b1101, // auditoxicosis
+            9412:   0b1110, // auditoxicosis
+            9231:   0b1111, // auditoxicosis
         },
 
         /**
