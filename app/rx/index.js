@@ -66,6 +66,7 @@ async function getInputStream(constraints) {
 
 function logAudioInput() {
     console.log(AXCVR.pitch.current());
+
     // console.log(frequencyData[bufferLength - 16]);
     // for (let i = 0; i < frequencyData.length; i++) {
     //     console.log("    " + frequencyData[i]);
@@ -75,7 +76,7 @@ function logAudioInput() {
 function tickAudioInput() {
     analyser.getByteFrequencyData(frequencyData);
 
-    logAudioInput();
+    // logAudioInput();
 }
 
 async function tick() {

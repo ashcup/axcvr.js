@@ -7,7 +7,7 @@ const AXCVR_PROTOCOL_VERSION = AXCVR.PROTOCOL_VERSION_DEFAULT;
 // create web audio api context
 let audioCtx;
 
-function playNote(frequency, duration) {
+AXCVR._playNote = function _playNote(frequency, duration, tempo, remainingNotes) {
     console.log("Playing note " + frequency + " for " + duration + " ticks")
   // create Oscillator node
   var oscillator = audioCtx.createOscillator();
@@ -20,15 +20,24 @@ function playNote(frequency, duration) {
   setTimeout(
     function() {
       oscillator.stop();
-      playMelody();
+      AXCVR.playMelody(remainingNotes, tempo);
     }, duration);
 }
 
-function playMelody() {
-  if (notes.length > 0) {
-    note = notes.pop();
-    playNote(note[0], 1000 * 256 / (note[1] * tempo));
+AXCVR.playNote = function playNote(note, frequency, duration, tempo) {
+    AXCVR._playNote(frequency, duration, tempo, [ note ]);
+}
+
+AXCVR._playMelody = function _playMelody(remainingNotes, tempo) {
+  if (remainingNotes.length > 0) {
+    const note = remainingNotes.pop();
+    AXCVR._playNote(note[0], 64, tempo, remainingNotes);
   }
+}
+
+AXCVR.playMelody = function playMelody(remainingNotes, tempo) {
+  const melody = JSON.parse(JSON.stringify(remainingNotes));
+  return AXCVR._playMelody(melody, tempo);
 }
 
 function start() {
@@ -38,23 +47,23 @@ function start() {
 
     console.log(frequencies);
 
-    notes = [
-        [frequencies[0], 1],
-        [frequencies[1], 1],
-        [frequencies[2], 1],
-        [frequencies[3], 2],
-        [frequencies[4], 4],
-        [frequencies[5], 4],
-        [frequencies[6], 1],
-        [frequencies[7], 2],
-        [frequencies[8], 4],
-        [frequencies[9], 4],
+    const notes = [
+        [frequencies[0],  1],
+        [frequencies[1],  1],
+        [frequencies[2],  1],
+        [frequencies[3],  1],
+        [frequencies[4],  1],
+        [frequencies[5],  1],
+        [frequencies[6],  1],
+        [frequencies[7],  1],
+        [frequencies[8],  1],
+        [frequencies[9],  1],
         [frequencies[10], 1],
         [frequencies[11], 1],
         [frequencies[12], 1],
         [frequencies[13], 1],
         [frequencies[14], 1],
-        [frequencies[15], 2],
+        [frequencies[15], 1],
         // [frequencies[16], 4],
         // [frequencies[17], 4],
         // [frequencies[18], 1],
@@ -64,8 +73,7 @@ function start() {
         // [frequencies[22], 1]
     ];
 
-    notes.reverse();
-    tempo = 100;
+    const tempo = 100;
 
-    playMelody();
+    AXCVR.playMelody(notes, tempo);
 }

@@ -5,7 +5,7 @@
 if (typeof AXCVR === "undefined" || AXCVR === null) {
     AXCVR = {};
 
-    AXCVR.TRANSFER_RATE = 200;
+    AXCVR.TRANSFER_RATE = 4;
 
     AXCVR.pitch = {};
 
