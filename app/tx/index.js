@@ -31,7 +31,7 @@ AXCVR.playNote = function playNote(note, frequency, duration, tempo) {
 AXCVR._playMelody = function _playMelody(remainingNotes, tempo) {
   if (remainingNotes.length > 0) {
     const note = remainingNotes.pop();
-    AXCVR._playNote(note[0], 10, tempo, remainingNotes);
+    AXCVR._playNote(note[0], 5, tempo, remainingNotes);
   }
 }
 
