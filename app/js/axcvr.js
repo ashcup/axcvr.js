@@ -529,3 +529,47 @@ class Channel {
         return new Channel(channelIndex, channelFrequency);
     }
 }
+
+AXCVR.Version = class Version {
+    #major = 0;
+    #minor = 0;
+    #patch = 0;
+    #frequencies = {};
+
+    constructor(major, minor, patch) {
+        if (typeof major !== "number") major = 1;
+        if (typeof minor !== "number") minor = 0;
+        if (typeof patch !== "number") patch = 0;
+        this.#major = major;
+        this.#minor = minor;
+        this.#patch = patch;
+    }
+
+    getFrequency(name) {
+        return this.#frequencies[name];
+    }
+}
+
+// v1
+
+/// AIP v1.0.0
+AXCVR.v1_0_0 = new AXCVR.Version(1, 0, 0);
+AXCVR.v1_0 = AXCVR.v1_0_0;
+AXCVR.v1 = AXCVR.v1_0;
+AXCVR.VERSION_DEFAULT = AXCVR.v1;
+
+AXCVR.Transmitter = class Transmitter {
+    #version = new AXCVR.Version(1);
+
+    get version() {
+        return this.#version;
+    }
+
+    constructor() {
+        thsi .#version = AXCVR.VERSION_DEFAULT;
+    }
+
+    getFrequency(name) {
+        return this.version[name];
+    }
+}

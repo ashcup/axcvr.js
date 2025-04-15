@@ -28,10 +28,36 @@ AXCVR.playNote = function playNote(note, frequency, duration, tempo) {
     AXCVR._playNote(frequency, duration, tempo, [ note ]);
 }
 
+AXCVR._transmit = function _transmit(note, tempo, remainingNotes) {
+    const frequency = note[0];
+    const duration = note[1];
+
+    console.log("Playing note " + frequency + " for " + duration + " ticks")
+    // create Oscillator node
+    var oscillator = audioCtx.createOscillator();
+
+    oscillator.type = 'square';
+    oscillator.frequency.value = note[0]; // value in hertz
+    oscillator.connect(audioCtx.destination);
+    oscillator.start();
+
+    setTimeout(
+        function() {
+            oscillator.stop();
+            AXCVR.playMelody(remainingNotes, tempo);
+        },
+        note[1]
+    );
+}
+
+AXCVR.transmit = function transmitNote(note, tempo) {
+    AXCVR._transmit(note, tempo, []);
+}
+
 AXCVR._playMelody = function _playMelody(remainingNotes, tempo) {
   if (remainingNotes.length > 0) {
     const note = remainingNotes.pop();
-    AXCVR._playNote(note[0], 5, tempo, remainingNotes);
+    AXCVR._playNote(note[0], 1000 * 256 / (note[1] * tempo), tempo, remainingNotes);
   }
 }
 
@@ -49,19 +75,61 @@ function start() {
 
     const notes = [
         [frequencies[0],  1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[1],  1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[2],  1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[3],  1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[4],  1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[5],  1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[6],  1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[7],  1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[8],  1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[9],  1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[10], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[11], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[12], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[13], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
+        [frequencies[15], 1],
         [frequencies[14], 1],
         [frequencies[15], 1],
         // [frequencies[16], 4],
@@ -73,7 +141,7 @@ function start() {
         // [frequencies[22], 1]
     ];
 
-    const tempo = 100;
+    const tempo = 10000;
 
     AXCVR.playMelody(notes, tempo);
 }
